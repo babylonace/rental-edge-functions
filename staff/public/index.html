@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Staff dashboard (demo)</title>
+  <style>
+    :root { color-scheme: light dark; font-family: system-ui, sans-serif; line-height: 1.5; }
+    body { max-width: 40rem; margin: 2rem auto; padding: 0 1rem; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; padding: .5rem; border-bottom: 1px solid color-mix(in srgb, currentColor 20%, transparent); }
+  </style>
+</head>
+<body>
+  <!-- Minimal stand-in for the real dashboard. Behind Cloudflare Access, /api/today answers; anywhere else it is 403. -->
+  <h1>Today</h1>
+  <p id="state">Loading…</p>
+  <table hidden>
+    <thead><tr><th scope="col">Unit</th><th scope="col">Yesterday</th><th scope="col">Today</th><th scope="col">Tomorrow</th></tr></thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    const LABELS = { turn: 'Turnover', out: 'Check-out', in: 'Check-in', stay: 'Occupied', blocked: 'Blocked', free: 'Free' };
+    const label = (d) => LABELS[d.status] + (d.note === 'early-checkin' ? ' (early check-in)' : '');
+
+    (async () => {
+      const state = document.getElementById('state');
+      const res = await fetch('/api/today', { credentials: 'same-origin' });
+      if (res.status === 403) { state.textContent = 'Sign in through Cloudflare Access to see the calendars.'; return; }
+      if (!res.ok) { state.textContent = 'No calendar could be read. Check UNITS and the ICAL_* secrets.'; return; }
+      const body = await res.json();
+      state.textContent = `${body.date}` + (body.missing.length ? ` · not read: ${body.missing.join(', ')}` : '');
+      const rows = Object.keys(body.units).map((u) => {
+        const tr = document.createElement('tr');
+        for (const text of [u, label(body.yesterday[u]), label(body.units[u]), label(body.tomorrow[u])]) {
+          const td = document.createElement('td');
+          td.textContent = text;
+          tr.append(td);
+        }
+        return tr;
+      });
+      document.querySelector('tbody').append(...rows);
+      document.querySelector('table').hidden = false;
+    })();
+  </script>
+</body>
+</html>

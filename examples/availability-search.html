@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Availability search (example)</title>
+  <style>
+    :root { color-scheme: light dark; font-family: system-ui, sans-serif; line-height: 1.5; }
+    body { max-width: 34rem; margin: 2rem auto; padding: 0 1rem; }
+    form { display: flex; flex-wrap: wrap; gap: .75rem; align-items: end; }
+    label { display: grid; gap: .25rem; }
+    input, button { font: inherit; padding: .5rem; }
+  </style>
+</head>
+<body>
+  <!--
+    Drop this form into your public site. Set API to your staff project's URL and add your site's
+    origin to ALLOWED_ORIGINS in that project, or the browser will block the response (CORS).
+  -->
+  <h1>Check availability</h1>
+  <form id="search">
+    <label>Check-in <input type="date" name="checkin" required></label>
+    <label>Check-out <input type="date" name="checkout" required></label>
+    <button type="submit">Search</button>
+  </form>
+  <ul id="results" aria-live="polite"></ul>
+
+  <script>
+    const API = 'https://staff.example.com/api/availability';
+    const list = document.getElementById('results');
+
+    document.getElementById('search').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const q = new URLSearchParams(new FormData(e.target));
+      list.replaceChildren();
+      const res = await fetch(`${API}?${q}`);
+      const body = await res.json();
+      if (!res.ok) { list.append(Object.assign(document.createElement('li'), { textContent: body.error === 'bad-dates' ? 'Check the dates.' : 'Try again later.' })); return; }
+      for (const [unit, free] of Object.entries(body.units)) {
+        list.append(Object.assign(document.createElement('li'), { textContent: `${unit}: ${free ? 'available' : 'booked'}` }));
+      }
+    });
+  </script>
+</body>
+</html>

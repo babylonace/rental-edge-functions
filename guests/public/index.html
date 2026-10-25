@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Guest guide (demo)</title>
+  <style>
+    :root { color-scheme: light dark; font-family: system-ui, sans-serif; line-height: 1.5; }
+    body { max-width: 34rem; margin: 2rem auto; padding: 0 1rem; }
+    button { font: inherit; padding: .6rem 1rem; border-radius: .5rem; border: 1px solid currentColor; background: none; cursor: pointer; }
+    output { display: block; margin-top: 1rem; padding: 1rem; border-radius: .5rem; background: color-mix(in srgb, currentColor 8%, transparent); }
+  </style>
+</head>
+<body>
+  <!-- Minimal stand-in for the real guest guide: replace it with your own pages. -->
+  <h1>Welcome</h1>
+  <p>Open this page from the link in your check-in message to see the Wi-Fi details.</p>
+  <button id="show" type="button">Show Wi-Fi</button>
+  <output id="wifi" aria-live="polite"></output>
+
+  <script>
+    // The cookie is HttpOnly, so this script cannot read it: it only asks the API and shows the answer.
+    const out = document.getElementById('wifi');
+    document.getElementById('show').addEventListener('click', async () => {
+      out.textContent = 'Loading…';
+      try {
+        const res = await fetch('/api/wifi', { credentials: 'same-origin' });
+        const body = await res.json();
+        if (res.ok) out.textContent = `Network: ${body.ssid} · Password: ${body.password}`;
+        else if (res.status === 401) out.textContent = 'Locked. Open the link from your check-in message.';
+        else out.textContent = 'The Wi-Fi details are not set up yet.';
+      } catch {
+        out.textContent = 'Could not reach the server.';
+      }
+    });
+  </script>
+</body>
+</html>
