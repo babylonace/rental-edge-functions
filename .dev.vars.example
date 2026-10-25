@@ -1,0 +1,18 @@
+# Copy to .dev.vars (git-ignored) for local runs with `wrangler pages dev`. In production these are
+# Cloudflare Pages variables and encrypted secrets, never files in the repository.
+
+# guests project
+GUEST_TOKEN=replace-with-at-least-16-random-characters
+GUEST_TOKEN_PREV=
+WIFI_SSID=Example-WiFi
+WIFI_PASS=example-password
+
+# staff project
+UNITS=A1,A2,B1
+ICAL_A1=https://www.airbnb.com/calendar/ical/0000000.ics?s=replace-me
+ICAL_A2=
+ICAL_B1=
+TIMEZONE=America/Lima
+ALLOWED_ORIGINS=https://www.example.com,https://*.example-preview.pages.dev,http://localhost:8788
+ACCESS_TEAM_DOMAIN=https://your-team.cloudflareaccess.com
+ACCESS_AUD=replace-with-the-application-audience-tag
