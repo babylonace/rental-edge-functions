@@ -1,0 +1,19 @@
+{
+  "name": "rental-edge-functions",
+  "version": "1.0.0",
+  "description": "Serverless backend for a short-term rental business on Cloudflare Pages Functions: Airbnb iCal parsing, a public availability API, token-to-cookie guest access and Cloudflare Access JWT verification.",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test \"test/*.test.js\"",
+    "demo": "node scripts/demo.js",
+    "bench": "node scripts/bench.js",
+    "token": "node scripts/new-token.js",
+    "dev:guests": "cd guests && npx --yes wrangler@4 pages dev public --port 8788",
+    "dev:staff": "cd staff && npx --yes wrangler@4 pages dev public --port 8789"
+  }
+}

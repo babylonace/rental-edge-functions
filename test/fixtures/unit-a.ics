@@ -1,0 +1,48 @@
+BEGIN:VCALENDAR
+PRODID:-//Airbnb Inc//Hosting Calendar 1.0//EN
+CALSCALE:GREGORIAN
+VERSION:2.0
+BEGIN:VEVENT
+DTEND;VALUE=DATE:20260310
+DTSTART;VALUE=DATE:20260305
+UID:fixture-a-0001@example.test
+DESCRIPTION:Reservation URL: https://www.airbnb.com/hosting/reservations/
+ details/HMFAKE0001\nPhone Number (Last 4 Digits): 0000
+SUMMARY:Reserved
+END:VEVENT
+BEGIN:VEVENT
+DTEND;VALUE=DATE:20260314
+DTSTART;VALUE=DATE:20260310
+UID:fixture-a-0002@example.test
+DESCRIPTION:Reservation URL: https://www.airbnb.com/hosting/reservations/
+ details/HMFAKE0002\nPhone Number (Last 4 Digits): 0000
+SUMMARY:Reserved
+END:VEVENT
+BEGIN:VEVENT
+DTEND;VALUE=DATE:20260321
+DTSTART;VALUE=DATE:20260320
+UID:fixture-a-0003@example.test
+SUMMARY:Airbnb (Not available)
+END:VEVENT
+BEGIN:VEVENT
+DTEND;VALUE=DATE:20260323
+DTSTART;VALUE=DATE:20260321
+UID:fixture-a-0004@example.test
+DESCRIPTION:Reservation URL: https://www.airbnb.com/hosting/reservations/
+ details/HMFAKE0003\nPhone Number (Last 4 Digits): 0000
+SUMMARY:Reserved
+END:VEVENT
+BEGIN:VEVENT
+DTEND;VALUE=DATE:20260403
+DTSTART;VALUE=DATE:20260328
+UID:fixture-a-0005@example.test
+DESCRIPTION:Reservation URL: https://www.airbnb.com/hosting/reservations/
+ details/HMFAKE0004\nPhone Number (Last 4 Digits): 0000
+SUMMARY:Reserved
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20260415
+UID:fixture-a-broken@example.test
+SUMMARY:Reserved
+END:VEVENT
+END:VCALENDAR

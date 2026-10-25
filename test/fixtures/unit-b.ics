@@ -1,0 +1,19 @@
+BEGIN:VCALENDAR
+PRODID:-//Airbnb Inc//Hosting Calendar 1.0//EN
+CALSCALE:GREGORIAN
+VERSION:2.0
+BEGIN:VEVENT
+DTEND;VALUE=DATE:20260315
+DTSTART;VALUE=DATE:20260308
+UID:fixture-b-0001@example.test
+DESCRIPTION:Reservation URL: https://www.airbnb.com/hosting/reservations/
+ details/HMFAKE0101\nPhone Number (Last 4 Digits): 0000
+SUMMARY:Reserved
+END:VEVENT
+BEGIN:VEVENT
+DTEND;VALUE=DATE:20260319
+DTSTART;VALUE=DATE:20260316
+UID:fixture-b-0002@example.test
+SUMMARY:Airbnb (Not available)
+END:VEVENT
+END:VCALENDAR
