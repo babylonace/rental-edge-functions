@@ -6,7 +6,7 @@ Everything below was read from the repository settings and workflow files on 202
 
 ## What happens to a change
 
-1. The work happens on a branch. A ruleset on `main` requires a pull request and the status checks listed below, blocks force-pushes and deletion, and has an empty bypass list, so it applies to the maintainer too.
+1. The work happens on a branch. A ruleset on `main` requires a pull request and the status checks listed below, blocks force-pushes and deletion. The one bypass is the repository admin role (the maintainer), and only through a pull request, so a single maintainer is never locked out by a stuck check and `main` still never receives a direct push.
 2. The pull request follows [the template](../.github/pull_request_template.md): what and why, how it was checked, a risk level (low, medium, high) and a checklist.
 3. CI runs on the branch and on the pull request.
 4. The maintainer reads the diff and merges once the required checks are green.
@@ -70,7 +70,7 @@ Numbers below were printed by the linked runs on 2026-11-05 and 2026-11-06. They
 
 ## Copy this setup
 
-1. Ruleset on the default branch: require a pull request, require status checks, block deletion and force-pushes, leave the bypass list empty. Use the exact job names as they appear on a pull request (for a matrix job that includes the version, for example `test (22)`); a required check that never reports blocks the merge forever.
+1. Ruleset on the default branch: require a pull request, require status checks, block deletion and force-pushes. In a one-person project allow the admin role to bypass through a pull request only; with a team, leave the bypass list empty. Use the exact job names as they appear on a pull request (for a matrix job that includes the version, for example `test (22)`); a required check that never reports blocks the merge forever.
 2. Settings, Code security: secret scanning, push protection, Dependabot alerts and security updates, private vulnerability reporting, CodeQL default setup. Add a `secrets` job that runs gitleaks over the full history and checks the downloaded archive against a SHA-256 hash.
 3. `.github/dependabot.yml` with a weekly schedule for each ecosystem in use, including `github-actions`.
 4. In each workflow: `permissions: contents: read`, and every action pinned to a full commit hash with the version as a comment. Then turn on the Actions setting that requires full-length commit SHAs, so a later change cannot undo it.
