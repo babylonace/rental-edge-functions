@@ -154,6 +154,7 @@ analysis, the complexity and what would change at a larger scale are in
 - **Strict input.** Dates are checked for format, range (1 to 90 nights, up to 400 days ahead, not in the
   past) and only Airbnb calendar URLs are fetched. CORS answers only listed origins.
 - **Private by default.** `noindex`, `no-referrer`, `nosniff` and `no-store` on everything private.
+- **Checked before it merges.** Pull request, required tests and a history scan on `main`: [docs/how-this-repo-is-developed.md](docs/how-this-repo-is-developed.md).
 
 ## Tests
 
