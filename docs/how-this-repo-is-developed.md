@@ -18,9 +18,11 @@ _(this repository)_ Required for `main`: `test (22)`, `test (24)` and `secrets`.
 | Job | What it runs | Blocks the merge |
 | --- | --- | --- |
 | `test (22)`, `test (24)` | `npm test` with Node's built-in runner, on Node 22 and on Node 24. The tests use a fake `fetch` that fails on any unexpected URL, a frozen clock and a throwaway key pair, so none touches the network. | Yes |
-| `secrets` | gitleaks 8.30.1 over the whole git history (`fetch-depth: 0`), not only the last commit. | Yes |
+| `secrets` | gitleaks 8.30.1 over the whole git history (`fetch-depth: 0`), not only the last commit. The archive is checked against a SHA-256 hash first. | Yes |
 
-Workflows declare `permissions: contents: read`, and the repository default token is read-only too. A job that needs more asks for it explicitly (none does here). Every action is pinned to a full commit hash with the version in a comment.
+Workflows declare `permissions: contents: read`, and the repository default token is read-only too. A job that needs more asks for it explicitly (none does here). Every action is pinned to a full commit hash with the version in a comment, and a repository setting makes GitHub refuse any action that is not.
+
+GitHub CodeQL (default setup, JavaScript/TypeScript and workflow files) scans the code. Its findings appear in the Security tab; it is not a required check.
 
 ## What a person checks
 
@@ -48,30 +50,30 @@ GitHub Dependabot alerts and Dependabot security updates are on.
 ## Secrets and vulnerabilities
 
 - GitHub secret scanning and push protection are on: a push containing a recognised secret is blocked unless the pusher explicitly overrides it.
+- CI also scans the whole git history with gitleaks on every push and pull request (the `secrets` job). The gitleaks archive it downloads must match a SHA-256 hash written in the workflow, taken from the release's checksums file; a mismatch fails the job.
 - The repository stores no secrets. There are zero repository secrets. The runtime secrets live in Cloudflare, outside GitHub.
 - Private vulnerability reporting is on, and [SECURITY.md](../SECURITY.md) says how to use it and what is in scope.
 
 ## Evidence _(this repository)_
 
-Numbers below were printed by the linked run on 2026-11-05. They change as tests are added.
+Numbers below were printed by the linked runs on 2026-11-05 and 2026-11-06. They change as tests are added.
 
 - Pull request that added these controls: [#1](https://github.com/babylonace/rental-edge-functions/pull/1).
 - [Pull request run](https://github.com/babylonace/rental-edge-functions/actions/runs/42132058186), all required checks green: `test (22)` 7 s and `test (24)` 7 s, 41 of 41 tests on each; `secrets` 5 s, 7 commits scanned, no leaks found.
+- [Run on the branch that added the archive hash check](https://github.com/babylonace/rental-edge-functions/actions/runs/42138680901): `test (22)` 5 s, `test (24)` 6 s, `secrets` 5 s (archive hash `OK`, 9 commits scanned, no leaks found).
 
 ## What is not covered
 
 - The human review above is not enforced (see "What a person checks").
 - "Require branches to be up to date before merging" is off, so a pull request is checked on its own branch, not against the latest `main`.
-- No code scanning (CodeQL or similar) is configured. Commit signing is not required.
-- The Actions setting that forces every action to be pinned to a hash is off. Pinning is done in the workflow files and holds today because every `uses:` line is pinned, but GitHub would not refuse an unpinned one.
-- The gitleaks binary is downloaded from its release page at run time and its checksum is not verified.
+- CodeQL findings do not block a merge, and commit signing is not required.
 
 ## Copy this setup
 
 1. Ruleset on the default branch: require a pull request, require status checks, block deletion and force-pushes, leave the bypass list empty. Use the exact job names as they appear on a pull request (for a matrix job that includes the version, for example `test (22)`); a required check that never reports blocks the merge forever.
-2. Settings, Code security: secret scanning, push protection, Dependabot alerts and security updates, private vulnerability reporting.
+2. Settings, Code security: secret scanning, push protection, Dependabot alerts and security updates, private vulnerability reporting, CodeQL default setup. Add a `secrets` job that runs gitleaks over the full history and checks the downloaded archive against a SHA-256 hash.
 3. `.github/dependabot.yml` with a weekly schedule for each ecosystem in use, including `github-actions`.
-4. In each workflow: `permissions: contents: read`, and every action pinned to a full commit hash with the version as a comment.
+4. In each workflow: `permissions: contents: read`, and every action pinned to a full commit hash with the version as a comment. Then turn on the Actions setting that requires full-length commit SHAs, so a later change cannot undo it.
 5. `.github/CODEOWNERS`, `.github/pull_request_template.md` and `SECURITY.md`.
 6. After the first pull request goes through, link its CI run in the evidence section and write down only numbers a run printed.
 
