@@ -136,6 +136,7 @@ una hora, así que Airbnb recibe más o menos una petición por anuncio cada 10 
 - **Mínimos datos hacia fuera.** El endpoint público solo responde sí o no, y un test falla si aparece una fecha o un enlace de Airbnb.
 - **Entrada estricta.** Formato y rango de fechas (de 1 a 90 noches, hasta 400 días vista, nunca en el
   pasado), solo se piden URLs de calendario de Airbnb y CORS responde solo a los orígenes de la lista.
+- **Comprobado antes de fusionar.** Pull request, tests obligatorios y revisión del historial en `main`: [docs/how-this-repo-is-developed.md](docs/how-this-repo-is-developed.md) (en inglés).
 
 ## Tests
 
