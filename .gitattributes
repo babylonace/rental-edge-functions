@@ -1,0 +1,3 @@
+# Keep the calendar fixtures byte-identical on every OS. The parser test adds Windows line endings
+# itself, so a checkout that converts them first (core.autocrlf on Windows) fails that test.
+*.ics text eol=lf
