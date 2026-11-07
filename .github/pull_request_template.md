@@ -14,7 +14,7 @@
 
 ## Author checklist
 
-- [ ] I read the whole diff and can explain every change.
+- [ ] I read the diff to understand what was done, and corrected it where needed.
 - [ ] Tests were added or updated for any behaviour that changed.
 - [ ] Every new dependency exists on its registry, is maintained, and was added on purpose (no invented or look-alike package names).
 - [ ] No secrets, tokens, personal data or private paths in code, comments, logs or test data.
